@@ -127,6 +127,16 @@ var online = navigator.onLine;
   populateChart();
   populateTable();
   populateTotal();
+  if (!online){
+
+    if (localStorage.getItem ('transaction')){
+      oldTransactions = JSON.parse(localStorage.getItem('transaction'))
+      oldTransactions.push(transaction)
+      localStorage.setItem('transaction')
+    }
+
+
+  }
   
   // also send to server
   fetch("/api/transaction", {
@@ -158,7 +168,7 @@ var online = navigator.onLine;
     nameEl.value = "";
     amountEl.value = "";
   });
-}
+
 
 document.querySelector("#add-btn").onclick = function() {
   sendTransaction(true);
