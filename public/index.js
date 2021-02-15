@@ -151,11 +151,14 @@ var online = navigator.onLine;
   .then(data => {
     if (data.errors) {
       errorEl.textContent = "Missing Information";
-    }
-    else {
+    } else {
       // clear form
+      try {
       nameEl.value = "";
       amountEl.value = "";
+      } catch (err){
+        console.log(err);
+      }
     }
   })
   .catch(err => {
@@ -166,7 +169,7 @@ var online = navigator.onLine;
     nameEl.value = "";
     amountEl.value = "";
   });
-
+}
 
 document.querySelector("#add-btn").onclick = function() {
   sendTransaction(true);
@@ -175,3 +178,10 @@ document.querySelector("#add-btn").onclick = function() {
 document.querySelector("#sub-btn").onclick = function() {
   sendTransaction(false);
 };
+
+document.addEventListener("DOMContentLoaded", function() {
+  var online = navigator.online;
+  if(!online){
+    transactionDetails = JSON.parse
+  }
+}
