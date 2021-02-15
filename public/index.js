@@ -1,6 +1,6 @@
 let transactions = [];
 let myChart;
-
+let offlineTransactions = []
 fetch("/api/transaction")
   .then(response => {
     return response.json();
@@ -78,7 +78,11 @@ function populateChart() {
   });
 }
 
-function sendTransaction(isAdding) {
+function sendTransaction(isAdding, offlineTransaction) {
+
+  if (offlineTransaction == undefined) {
+
+  
   let nameEl = document.querySelector("#t-name");
   let amountEl = document.querySelector("#t-amount");
   let errorEl = document.querySelector(".form .error");
@@ -93,11 +97,17 @@ function sendTransaction(isAdding) {
   }
 
   // create record
-  let transaction = {
-    name: nameEl.value,
-    value: amountEl.value,
+  var transaction = {
+    name: nameEl.value || offlineTransaction.name,
+    value: amountEl.value ||offlineTransaction.value,
     date: new Date().toISOString()
   };
+} else {
+  let nameEl = offlineTransaction.name
+  let amountEl = offlineTransaction.value 
+ //create record 
+}
+
 
   // if subtracting funds, convert amount to negative number
   if (!isAdding) {
