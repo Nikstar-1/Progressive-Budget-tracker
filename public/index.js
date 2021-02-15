@@ -105,9 +105,15 @@ function sendTransaction(isAdding, offlineTransaction) {
 } else {
   let nameEl = offlineTransaction.name
   let amountEl = offlineTransaction.value 
- //create record 
 }
-
+// create record
+var transaction = {
+  name: nameEl,
+  value: amountEl,
+  date: new Date().toISOString()
+ };
+}
+var online = navigator.onLine;
 
   // if subtracting funds, convert amount to negative number
   if (!isAdding) {
