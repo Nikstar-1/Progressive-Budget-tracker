@@ -1,11 +1,11 @@
 let transactions = [];
 let myChart;
-let offlineTransactions = []
+let offlineTransactions = [];
 fetch("/api/transaction")
-  .then(response => {
+  .then((response) => {
     return response.json();
   })
-  .then(data => {
+  .then((data) => {
     // save db data on global variable
     transactions = data;
 
@@ -28,7 +28,7 @@ function populateTable() {
   let tbody = document.querySelector("#tbody");
   tbody.innerHTML = "";
 
-  transactions.forEach((transaction => {
+  transactions.forEach((transaction) => {
     // create and populate a table row
     let tr = document.createElement("tr");
     tr.innerHTML = `
@@ -65,15 +65,15 @@ function populateChart() {
   let ctx = document.getElementById("myChart").getContext("2d");
 
   myChart = new Chart(ctx, {
-    type: 'line',
-      data: {
-        labels,
-        datasets: [
-          {
-            label: "Total Over Time",
-            fill: true,
-            backgroundColor: "#6666ff",
-            data,
+    type: "line",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "Total Over Time",
+          fill: true,
+          backgroundColor: "#6666ff",
+          data,
         },
       ],
     },
@@ -81,37 +81,37 @@ function populateChart() {
 }
 
 function sendTransaction(isAdding, offlineTransaction) {
- if (offlineTransaction == undefined) {
-  let nameEl = document.querySelector("#t-name");
-  let amountEl = document.querySelector("#t-amount");
-  let errorEl = document.querySelector(".form .error");
+  if (offlineTransaction == undefined) {
+    let nameEl = document.querySelector("#t-name");
+    let amountEl = document.querySelector("#t-amount");
+    let errorEl = document.querySelector(".form .error");
 
-  // validate form
-  if (nameEl.value === "" || amountEl.value === "") {
-    errorEl.textContent = "Missing Information";
-    return;
+    // validate form
+    if (nameEl.value === "" || amountEl.value === "") {
+      errorEl.textContent = "Missing Information";
+      return;
+    } else {
+      errorEl.textContent = "";
+    }
+
+    // create record
+    var transaction = {
+      name: nameEl.value || offlineTransaction.name,
+      value: amountEl.value || offlineTransaction.value,
+      date: new Date().toISOString(),
+    };
   } else {
-    errorEl.textContent = "";
+    let nameEl = offlineTransaction.name;
+    let amountEl = offlineTransaction.value;
+
+    // create record
+    var transaction = {
+      name: nameEl,
+      value: amountEl,
+      date: new Date().toISOString(),
+    };
   }
-
-  // create record
-  var transaction = {
-    name: nameEl.value || offlineTransaction.name,
-    value: amountEl.value ||offlineTransaction.value,
-    date: new Date().toISOString()
-  };
-} else {
-  let nameEl = offlineTransaction.name
-  let amountEl = offlineTransaction.value 
-
-// create record
-  var transaction = {
-   name: nameEl,
-   value: amountEl,
-   date: new Date().toISOString(),
-  };
- }
-var online = navigator.onLine;
+  var online = navigator.onLine;
 
   // if subtracting funds, convert amount to negative number
   if (!isAdding) {
@@ -125,63 +125,67 @@ var online = navigator.onLine;
   populateChart();
   populateTable();
   populateTotal();
-  if (!online){
-    if (localStorage.getItem ('transaction')) {
-      oldTransactions = JSON.parse(localStorage.getItem('transaction'));
+  if (!online) {
+    if (localStorage.getItem("transaction")) {
+      oldTransactions = JSON.parse(localStorage.getItem("transaction"));
       oldTransactions.push(transaction);
-      localStorage.setItem('transaction', JSON.stringify(offlineTransactions));
+      localStorage.setItem("transaction", JSON.stringify(oldTransactions));
     } else {
       offlineTransactions.push(transaction);
       localStorage.setItem("transaction", JSON.stringify(offlineTransactions));
     }
   }
-  
+
   // also send to server
   fetch("/api/transaction", {
     method: "POST",
     body: JSON.stringify(transaction),
     headers: {
       Accept: "application/json, text/plain, */*",
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
   })
-  .then(response => {    
-    return response.json();
-  })
-  .then(data => {
-    if (data.errors) {
-      errorEl.textContent = "Missing Information";
-    } else {
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      if (data.errors) {
+        errorEl.textContent = "Missing Information";
+      } else {
+        // clear form
+        try {
+          nameEl.value = "";
+          amountEl.value = "";
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    })
+    .catch((err) => {
+      // fetch failed, so save in indexed db
+      saveRecord(transaction);
+
       // clear form
-      try {
       nameEl.value = "";
       amountEl.value = "";
-      } catch (err){
-        console.log(err);
-      }
-    }
-  })
-  .catch(err => {
-    // fetch failed, so save in indexed db
-    saveRecord(transaction);
-
-    // clear form
-    nameEl.value = "";
-    amountEl.value = "";
-  });
+    });
 }
-
-document.querySelector("#add-btn").onclick = function() {
+document.querySelector("#add-btn").onclick = function () {
   sendTransaction(true);
 };
 
-document.querySelector("#sub-btn").onclick = function() {
+document.querySelector("#sub-btn").onclick = function () {
   sendTransaction(false);
 };
 
-document.addEventListener("DOMContentLoaded", function() {
-  var online = navigator.online;
-  if(!online){
-    transactionDetails = JSON.parse
+document.addEventListener('DOMContentLoaded', function() {
+  var online = navigator.onLine;
+  if (!online){
+
+    transactionDetails =JSON.parse(localStorage.getItem('transaction'))
+    for (var i = 0; i < transactionDetails.length; i++) {
+      sendTransaction(true,transactionDetails[i])
+    }
   }
-}
+  localStorage.removeItem('transaction');
+});
