@@ -28,7 +28,7 @@ function populateTable() {
   let tbody = document.querySelector("#tbody");
   tbody.innerHTML = "";
 
-  transactions.forEach(transaction => {
+  transactions.forEach((transaction => {
     // create and populate a table row
     let tr = document.createElement("tr");
     tr.innerHTML = `
@@ -46,13 +46,13 @@ function populateChart() {
   let sum = 0;
 
   // create date labels for chart
-  let labels = reversed.map(t => {
+  let labels = reversed.map((t) => {
     let date = new Date(t.date);
     return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
   });
 
   // create incremental values for chart
-  let data = reversed.map(t => {
+  let data = reversed.map((t) => {
     sum += parseInt(t.value);
     return sum;
   });
@@ -68,21 +68,20 @@ function populateChart() {
     type: 'line',
       data: {
         labels,
-        datasets: [{
+        datasets: [
+          {
             label: "Total Over Time",
             fill: true,
             backgroundColor: "#6666ff",
-            data
-        }]
-    }
+            data,
+        },
+      ],
+    },
   });
 }
 
 function sendTransaction(isAdding, offlineTransaction) {
-
-  if (offlineTransaction == undefined) {
-
-  
+ if (offlineTransaction == undefined) {
   let nameEl = document.querySelector("#t-name");
   let amountEl = document.querySelector("#t-amount");
   let errorEl = document.querySelector(".form .error");
@@ -91,8 +90,7 @@ function sendTransaction(isAdding, offlineTransaction) {
   if (nameEl.value === "" || amountEl.value === "") {
     errorEl.textContent = "Missing Information";
     return;
-  }
-  else {
+  } else {
     errorEl.textContent = "";
   }
 
@@ -105,14 +103,14 @@ function sendTransaction(isAdding, offlineTransaction) {
 } else {
   let nameEl = offlineTransaction.name
   let amountEl = offlineTransaction.value 
-}
+
 // create record
-var transaction = {
-  name: nameEl,
-  value: amountEl,
-  date: new Date().toISOString()
- };
-}
+  var transaction = {
+   name: nameEl,
+   value: amountEl,
+   date: new Date().toISOString(),
+  };
+ }
 var online = navigator.onLine;
 
   // if subtracting funds, convert amount to negative number
@@ -128,14 +126,14 @@ var online = navigator.onLine;
   populateTable();
   populateTotal();
   if (!online){
-
-    if (localStorage.getItem ('transaction')){
-      oldTransactions = JSON.parse(localStorage.getItem('transaction'))
-      oldTransactions.push(transaction)
-      localStorage.setItem('transaction')
+    if (localStorage.getItem ('transaction')) {
+      oldTransactions = JSON.parse(localStorage.getItem('transaction'));
+      oldTransactions.push(transaction);
+      localStorage.setItem('transaction', JSON.stringify(offlineTransactions));
+    } else {
+      offlineTransactions.push(transaction);
+      localStorage.setItem("transaction", JSON.stringify(offlineTransactions));
     }
-
-
   }
   
   // also send to server
@@ -145,7 +143,7 @@ var online = navigator.onLine;
     headers: {
       Accept: "application/json, text/plain, */*",
       "Content-Type": "application/json"
-    }
+    },
   })
   .then(response => {    
     return response.json();
