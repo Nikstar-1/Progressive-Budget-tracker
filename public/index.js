@@ -173,7 +173,7 @@ if ("serviceWorker" in navigator) {
             amountEl.value = "";
           }
           catch(err){
-            //console.log(err)
+            console.log(err)
           }
         }
       })

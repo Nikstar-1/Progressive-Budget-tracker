@@ -5,11 +5,11 @@ const FILES_TO_CACHE = [
   "/index.html",
   "/favicon.ico",
   "/manifest.webmanifest",
-  "styles.css",
-  "icons/icon-192x192.png",
-  "icons/icon-512x512.png",
-  "index.js",
-  "api.js",
+  "./styles.css",
+  "./icons/icon-192x192.png",
+  "./icons/icon-512x512.png",
+  "./index.js",
+  "./api.js",
 ];
 
 // install
@@ -38,7 +38,7 @@ self.addEventListener("activate", function (evt) {
 });
 // fetch
 self.addEventListener("fetch", function (evt) {
-  if (evt.request.url.includes("/api/")) {
+  if (evt.request.url.includes("./api/")) {
     evt.respondWith(
       caches
         .open(DATA_CACHE_NAME)
