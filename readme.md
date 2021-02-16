@@ -1,4 +1,5 @@
-## Progressive Web Application: Online/Offline Budget Trackers
+### Progressive Web Application: Online/Offline Budget Trackers
+
 
 Budget Tracker application to allow for offline access and functionality.
 
@@ -17,7 +18,7 @@ When brought back online:
 Offline entries should be added to tracker.
 
 
-### User Story
+### User Story
 
 
 AS AN avid traveller
@@ -73,24 +74,6 @@ This package assumes there is a MongoDB server running on localhost:27017. If yo
 
 To start the server, run npm start. To access the app after starting the server, go to http://localhost:3000 in your browser.
 
-### Built With
-
-HTML
-
-CSS
-
-Bootstrap
-
-JavaScript
-
-Node.js
-
-Express
-
-MongoDB Atlas
-
-Mongoose
-
 
 ### License
 
@@ -118,7 +101,26 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FO
 
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- 
+
+ ### Built With
+
+HTML
+
+CSS
+
+Bootstrap
+
+JavaScript
+
+Node.js
+
+Express
+
+MongoDB Atlas
+
+Mongoose
+
+
 ## Author
 
 Rekha Kumari
