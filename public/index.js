@@ -1,6 +1,18 @@
 let transactions = [];
 let myChart;
 let offlineTransactions = [];
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js").then((registration) => {
+      // this is the registration
+      console.log(registration);
+    })
+    .catch((error) => {
+      // this is the error, if there is one
+      console.log(error)
+    });
+
 fetch("/api/transaction")
   .then((response) => {
     return response.json();
@@ -189,3 +201,4 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   localStorage.removeItem('transaction');
 });
+  })}
