@@ -1,44 +1,18 @@
 let CACHE_NAME = "static-cache-v2";
 let DATA_CACHE_NAME = "data-cache-v1";
-let FILES_TO_CACHE = [
-  "/",
-  //"/index.html",
-  "/index.js",
-  //"/favicon.ico",
-  "/manifest.json",
-  "/styles.css",
-  "/icons/icon-192x192.png",
-  "/icons/icon-512x512.png",
-  // "/api.js",
-];
+let FILES_TO_CACHE = ["/", "/index.js", "/manifest.json", "/styles.css", "/icons/icon-192x192.png", "/icons/icon-512x512.png"];
 
 // install
 self.addEventListener("install", function (evt) {
   // pre cache all static assets
-  evt.waitUntil(caches.open(CACHE_NAME).then((cache) => {
-    console.log("Caching Available...")
-    return cache.addAll(FILES_TO_CACHE)}));
-  // tell the browser to activate this service worker immediately once it
-  // has finished installing
-  //self.skipWaiting();
-});
-// activate
-/*self.addEventListener("activate", function (evt) {
   evt.waitUntil(
-    caches.keys().then((keyList) => {
-      return Promise.all(
-        keyList.map((key) => {
-          if (key !== CACHE_NAME && key !== DATA_CACHE_NAME) {
-            console.log("Removing old cache data", key);
-            return caches.delete(key);
-          }
-        })
-      );
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log("Caching Available...");
+      return cache.addAll(FILES_TO_CACHE);
     })
   );
-  self.clients.claim();
-});*/
-// fetch
+});
+
 self.addEventListener("fetch", function (evt) {
   if (evt.request.url.includes("/api/")) {
     evt.respondWith(
@@ -68,13 +42,12 @@ self.addEventListener("fetch", function (evt) {
   evt.respondWith(
     fetch(evt.request).catch(() => {
       return caches.match(evt.request).then((response) => {
-        if(response){
+        if (response) {
           return response;
-        } else if (evt.request.headers.get('accept').includes('text/html')){
-          return caches.match('/')
+        } else if (evt.request.headers.get("accept").includes("text/html")) {
+          return caches.match("/");
         }
-      })
-    }))
-    
-  
+      });
+    })
+  );
 });
