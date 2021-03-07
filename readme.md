@@ -48,7 +48,7 @@ THEN that will be shown on the page, and added to their transaction history when
 
 
 **Main.**
-!["Start Page"](assets/images/Main.png "Start page.")
+!["Start Page"](public/images/PWA.png "Start page.")
 
 
 ## View Project
